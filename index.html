@@ -159,6 +159,18 @@
     #log {
       display: none;
     }
+
+    #announcement {
+      font-size: 1.2rem;
+      text-align: center;
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 10px;
+      background-color: #8b0000;
+      color: white;
+      box-shadow: 0 0 10px #ff4d4d;
+      display: none;
+    }
   </style>
 </head>
 
@@ -182,8 +194,18 @@
       <button id="bank-button" disabled>Lock Dice</button>
       <button id="end-turn-button" disabled>End Turn</button>
     </div>
-    <div class="log" id="log"></div>
-    <div id="announcement" style="color: red; font-weight: bold;"></div>
+    <!-- <div class="log" id="log"></div> -->
+    <div id="announcement" style="
+  font-size: 1.6rem;
+  margin-top: 10px;
+  padding: 12px;
+  font-weight: bold;
+  color: white;
+  background-color: #8b0000;
+  border-radius: 10px;
+  box-shadow: 0 0 12px #ff4d4d;
+  display: none;
+"></div>
     <div id="locked-dice-display" style="
   margin-top: 30px;
   background: #5e4b18;
@@ -327,9 +349,21 @@
     }
 
     // Log message helper
+    // function logMessage(msg) {
+    //   // log.innerHTML += `<div>${msg}</div>`;
+    //   // log.scrollTop = log.scrollHeight;
+
+    // }
+
     function logMessage(msg) {
-      // log.innerHTML += `<div>${msg}</div>`;
-      // log.scrollTop = log.scrollHeight;
+      const announcementDiv = document.getElementById('announcement');
+      announcementDiv.style.display = 'block';
+      announcementDiv.innerHTML = msg;
+
+      // Optional: Clear after 3 seconds (can adjust or remove)
+      setTimeout(() => {
+        announcementDiv.style.display = 'none';
+      }, 3000);
     }
 
     // Roll dice randomly
@@ -528,6 +562,167 @@
     //   return score;
     // }
 
+    // function calculateScore(dice) {
+    //   if (dice.length === 0) return 0;
+
+    //   let counts = Array(7).fill(0);
+    //   dice.forEach(d => counts[d]++);
+
+    //   // 1. Straight 1-6
+    //   if (counts.slice(1).every(c => c === 1)) return 1500;
+
+    //   // 2. Six of a kind
+    //   if (counts.some(c => c === 6)) return 3000;
+
+    //   // 3. Five of a kind
+    //   if (counts.some(c => c === 5)) return 2000;
+
+    //   // 4. Two triplets
+    //   if (counts.filter(c => c === 3).length === 2) return 2500;
+
+    //   // 5. Three pairs
+    //   if (counts.filter(c => c === 2).length === 3) return 1500;
+
+    //   // 6. Four of a kind + a pair
+    //   if (counts.some(c => c === 4) && counts.some(c => c === 2)) return 1500;
+
+    //   // 7. Four of a kind
+    //   if (counts.some(c => c === 4)) return 1000;
+
+    //   let score = 0;
+
+    //   // 8. Three of a kind (custom logic)
+    //   for (let i = 1; i <= 6; i++) {
+    //     if (counts[i] == 3) {
+    //       if (i === 1) score += 200;
+    //       else score += i * 100;
+    //       counts[i] -= 3; // remove those 3
+    //     }
+    //   }
+
+    //   // 9. Single 1s and 5s
+    //   score += counts[1] * 100;
+    //   score += counts[5] * 50;
+
+    //   return score;
+    // }
+    // function calculateScore(dice) {
+    //   if (dice.length === 0) return 0;
+
+    //   let counts = Array(7).fill(0);
+    //   dice.forEach(d => counts[d]++);
+
+    //   // 1. Straight 1-6
+    //   if (counts.slice(1).every(c => c === 1)) return 1500;
+
+    //   // 2. Six of a kind
+    //   if (counts.some(c => c === 6)) return 3000;
+
+    //   // 3. Five of a kind
+    //   if (counts.some(c => c === 5)) return 2000;
+
+    //   // 4. Two triplets
+    //   if (counts.filter(c => c === 3).length === 2) return 2500;
+
+    //   // 5. Three pairs
+    //   if (counts.filter(c => c === 2).length === 3) return 1500;
+
+    //   // 6. Four of a kind + a pair
+    //   if (counts.some(c => c === 4) && counts.some(c => c === 2)) return 1500;
+
+    //   let score = 0;
+
+    //   // 7. Four of a kind
+    //   for (let i = 1; i <= 6; i++) {
+    //     if (counts[i] === 4) {
+    //       score += 1000;
+    //       counts[i] -= 4;
+    //     }
+    //   }
+
+    //   // 8. Three of a kind (priority: 6 to 1)
+    //   for (let i = 6; i >= 1; i--) {
+    //     if (counts[i] >= 3) {
+    //       switch (i) {
+    //         case 1: score += 300; break;
+    //         case 2: score += 200; break;
+    //         case 3: score += 300; break;
+    //         case 4: score += 400; break;
+    //         case 5: score += 500; break;
+    //         case 6: score += 600; break;
+    //       }
+    //       counts[i] -= 3;
+    //     }
+    //   }
+
+    //   // 9. Single 1s and 5s
+    //   score += counts[1] * 100;
+    //   score += counts[5] * 50;
+
+    //   return score;
+    // }
+    // function calculateScore(dice) {
+    //   if (dice.length === 0) return 0;
+
+    //   let counts = Array(7).fill(0);
+    //   dice.forEach(d => counts[d]++);
+
+    //   // 1. Straight 1-6
+    //   if (counts.slice(1).every(c => c === 1)) return 1500;
+
+    //   // 2. Six of a kind
+    //   if (counts.some(c => c === 6)) return 3000;
+
+    //   // 3. Five of a kind
+    //   if (counts.some(c => c === 5)) return 2000;
+
+    //   // 4. Two triplets
+    //   if (counts.filter(c => c === 3).length === 2) return 2500;
+
+    //   // 5. Three pairs
+    //   if (counts.filter(c => c === 2).length === 3) return 1500;
+
+    //   // 6. Four of a kind + a pair
+    //   if (counts.some(c => c === 4) && counts.some(c => c === 2)) return 1500;
+
+    //   let score = 0;
+
+    //   // 7. Handle 6, 5, 4 of a kind (reduce counts accordingly)
+    //   for (let i = 1; i <= 6; i++) {
+    //     if (counts[i] >= 6) {
+    //       score += 3000;
+    //       counts[i] -= 6;
+    //     } else if (counts[i] === 5) {
+    //       score += 2000;
+    //       counts[i] -= 5;
+    //     } else if (counts[i] === 4) {
+    //       score += 1000;
+    //       counts[i] -= 4;
+    //     }
+    //   }
+
+    //   // 8. Three of a kind (priority: 6 to 1)
+    //   for (let i = 6; i >= 1; i--) {
+    //     if (counts[i] >= 3) {
+    //       switch (i) {
+    //         case 1: score += 300; break; // From table
+    //         case 2: score += 200; break;
+    //         case 3: score += 300; break;
+    //         case 4: score += 400; break;
+    //         case 5: score += 500; break;
+    //         case 6: score += 600; break;
+    //       }
+    //       counts[i] -= 3;
+    //     }
+    //   }
+
+    //   // 9. Single 1s and 5s
+    //   score += counts[1] * 100;
+    //   score += counts[5] * 50;
+
+    //   return score;
+    // }
+
     function calculateScore(dice) {
       if (dice.length === 0) return 0;
 
@@ -552,26 +747,44 @@
       // 6. Four of a kind + a pair
       if (counts.some(c => c === 4) && counts.some(c => c === 2)) return 1500;
 
-      // 7. Four of a kind
-      if (counts.some(c => c === 4)) return 1000;
-
       let score = 0;
 
-      // 8. Three of a kind (custom logic)
+      // 7. Handle 6, 5, 4 of a kind
       for (let i = 1; i <= 6; i++) {
-        if (counts[i] >= 3) {
-          if (i === 1) score += 200;
-          else score += i * 100;
-          counts[i] -= 3; // remove those 3
+        if (counts[i] >= 6) {
+          score += 3000;
+          counts[i] -= 6;
+        } else if (counts[i] === 5) {
+          score += 2000;
+          counts[i] -= 5;
+        } else if (counts[i] === 4) {
+          score += 1000;
+          counts[i] -= 4;
         }
       }
 
-      // 9. Single 1s and 5s
+      // 8. Three of a kind (priority: 6 to 1) — must be >= 3
+      for (let i = 6; i >= 1; i--) {
+        if (counts[i] >= 3) {
+          switch (i) {
+            case 1: score += 300; break;
+            case 2: score += 200; break;
+            case 3: score += 300; break;
+            case 4: score += 400; break;
+            case 5: score += 500; break;
+            case 6: score += 600; break;
+          }
+          counts[i] -= 3;
+        }
+      }
+
+      // 9. Remaining single 1s and 5s
       score += counts[1] * 100;
       score += counts[5] * 50;
 
       return score;
     }
+
 
 
     // Check if all dice score (Hot Dice)
@@ -640,13 +853,36 @@
       //   }, 2000);
       //   return;
       // }
+
+      // if (isFarkle(diceValues, lockedDiceThisTurn)) {
+      //   const announcementDiv = document.getElementById('announcement');
+      //   const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
+      //   announcementDiv.innerHTML = `<span style="color: red;">Farkle!</span><br>Last Roll: ${lastRollText}`;
+      //   announcementDiv.style.display = 'block';
+
+      //   // Reset turn data for the player
+      //   turnScore = 0;
+      //   currentScore = 0;
+      //   rollUsed = false;
+      //   selectedDiceIndices.clear();
+      //   lockedDiceThisTurn = [];
+      //   updateLockedDiceDisplay();
+
+      //   setTimeout(() => {
+      //     announcementDiv.style.display = 'none';
+      //     nextTurn();
+      //   }, 2000);
+      //   return;
+      // }
       if (isFarkle(diceValues, lockedDiceThisTurn)) {
         const announcementDiv = document.getElementById('announcement');
         const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
-        announcementDiv.innerHTML = `<span style="color: red;">Farkle!</span><br>Last Roll: ${lastRollText}`;
+        announcementDiv.innerHTML = `<span style="color: red; font-size: 1.5rem;">Farkle!</span><br>Last Roll: ${lastRollText}`;
         announcementDiv.style.display = 'block';
 
-        // Reset turn data for the player
+        logMessage(`${players[currentPlayer].name} farkled! Rolled: ${lastRollText}`);
+
+        // Reset player turn state
         turnScore = 0;
         currentScore = 0;
         rollUsed = false;
@@ -657,7 +893,8 @@
         setTimeout(() => {
           announcementDiv.style.display = 'none';
           nextTurn();
-        }, 2000);
+        }, 2500);
+
         return;
       }
 
