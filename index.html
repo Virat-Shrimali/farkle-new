@@ -415,7 +415,7 @@
           //     selectedDiceIndices.add(idx);
           //     die.classList.add('selected');
           //   }
-          //   updateButtons();
+          //   ();
           // };
           // die.onclick = () => {
           //   if (!rollUsed) return;
@@ -444,7 +444,7 @@
           //     die.classList.add('selected');
           //   }
 
-          //   updateButtons();
+          //   ();
           // };
           // die.onclick = () => {
           //   if (!rollUsed) return;
@@ -473,7 +473,7 @@
           //       selectedDiceIndices.add(idx);
           //       die.classList.add('selected');
           //     }
-          //     updateButtons();
+          //     ();
           //   } else {
           //     // Invalid combo — don't allow this selection
           //     logMessage("This combination does not yield any score.");
@@ -503,7 +503,7 @@
           // selectedDiceIndices.add(idx);
           // die.classList.add('selected');
           // }
-          // updateButtons();
+          // ();
           // } else {
           // logMessage("This combination does not yield any score.");
           // }
@@ -533,7 +533,7 @@
           //       selectedDiceIndices.add(idx);
           //       die.classList.add('selected');
           //     }
-          //     updateButtons();
+          //     ();
           //   } else {
           //     logMessage("This selection doesn't yield a score. Choose a scoring combination.");
           //   }
@@ -551,7 +551,7 @@
     //           die.classList.add('selected');
     //         }
 
-    //         updateButtons(); // This will now check if selected dice yield score
+    //         (); // This will now check if selected dice yield score
     //       };
 
     //     });
@@ -866,15 +866,23 @@
     //   bankButton.disabled = !rollUsed || selectedDiceIndices.size === 0;
     //   endTurnButton.disabled = false; // Always allow ending turn
     // }
-    function updateButtons() {
-      rollButton.disabled = rollUsed || players[currentPlayer].isComputer;
+    // function updateButtons() {
+    //   rollButton.disabled = rollUsed || players[currentPlayer].isComputer;
 
-      const selectedDice = [...selectedDiceIndices].map(i => diceValues[i]);
-      const isScoringCombo = calculateScore(selectedDice) > 0;
+    //   const selectedDice = [...selectedDiceIndices].map(i => diceValues[i]);
+    //   const isScoringCombo = calculateScore(selectedDice) > 0;
 
-      bankButton.disabled = !rollUsed || !isScoringCombo;
-      endTurnButton.disabled = false; // Still allow ending turn
-    }
+    //   bankButton.disabled = !rollUsed || !isScoringCombo;
+    //   endTurnButton.disabled = false; // Still allow ending turn
+    // }
+          function updateButtons() {
+          const isPlayerTurn = !players[currentPlayer].isComputer;
+        
+          rollButton.disabled = !isPlayerTurn || rollUsed;
+          bankButton.disabled = !isPlayerTurn || !rollUsed || selectedDiceIndices.size === 0 || calculateScore([...selectedDiceIndices].map(i => diceValues[i])) === 0;
+          endTurnButton.disabled = !isPlayerTurn;
+        }
+
 
 
     // Handle rolling dice
@@ -1304,6 +1312,9 @@
     //   }
     // }
     function nextTurn() {
+      function nextTurn() {
+      rollUsed = false;
+
       currentPlayer = (currentPlayer + 1) % players.length;
 
       turnScore = 0;
