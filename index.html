@@ -538,25 +538,56 @@
           //     logMessage("This selection doesn't yield a score. Choose a scoring combination.");
           //   }
           // };
-          die.onclick = () => {
-            if (!rollUsed) return;
+    //       die.onclick = () => {
+    //         if (!rollUsed) return;
 
-            const idx = parseInt(die.dataset.index);
+    //         const idx = parseInt(die.dataset.index);
 
-            if (selectedDiceIndices.has(idx)) {
-              selectedDiceIndices.delete(idx);
-              die.classList.remove('selected');
-            } else {
-              selectedDiceIndices.add(idx);
-              die.classList.add('selected');
-            }
+    //         if (selectedDiceIndices.has(idx)) {
+    //           selectedDiceIndices.delete(idx);
+    //           die.classList.remove('selected');
+    //         } else {
+    //           selectedDiceIndices.add(idx);
+    //           die.classList.add('selected');
+    //         }
 
-            updateButtons(); // This will now check if selected dice yield score
-          };
+    //         updateButtons(); // This will now check if selected dice yield score
+    //       };
 
-        });
-      }
+    //     });
+    //   }
+    // }
+            die.onclick = () => {
+    if (!rollUsed) return;
+  
+    const idx = parseInt(die.dataset.index);
+    const newSelection = new Set(selectedDiceIndices);
+  
+    if (newSelection.has(idx)) {
+      newSelection.delete(idx);
+    } else {
+      newSelection.add(idx);
     }
+  
+    const selectedDice = [...newSelection].map(i => diceValues[i]);
+    const baseScore = calculateScore(lockedDiceThisTurn);
+    const combinedScore = calculateScore([...lockedDiceThisTurn, ...selectedDice]);
+  
+    if (combinedScore > baseScore) {
+      // Valid selection — apply it
+      if (selectedDiceIndices.has(idx)) {
+        selectedDiceIndices.delete(idx);
+        die.classList.remove('selected');
+      } else {
+        selectedDiceIndices.add(idx);
+        die.classList.add('selected');
+      }
+      updateButtons();
+    } else {
+      logMessage("This selection does not increase your score.");
+    }
+  };
+
 
     // Calculate score based on dice array
     // function calculateScore(dice) {
