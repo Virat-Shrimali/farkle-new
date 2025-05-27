@@ -279,26 +279,52 @@
     //   // If none of the above apply, it's a Farkle
     //   return true;
     // }
-    function isFarkle(currentRoll, lockedDice) {
-      const n = currentRoll.length;
+    // function isFarkle(currentRoll, lockedDice) {
+    //   const n = currentRoll.length;
 
-      // Generate all non-empty subsets of currentRoll
+    //   // Generate all non-empty subsets of currentRoll
+    //   for (let i = 1; i < (1 << n); i++) {
+    //     let subset = [];
+    //     for (let j = 0; j < n; j++) {
+    //       if ((i & (1 << j)) !== 0) {
+    //         subset.push(currentRoll[j]);
+    //       }
+    //     }
+
+    //     // Combine with lockedDice and check score
+    //     const testDice = [...lockedDice, ...subset];
+    //     if (calculateScore(testDice) > 0) {
+    //       return false; // There exists a scoring combination
+    //     }
+    //   }
+
+    //   return true; // No scoring combination found — it's a Farkle
+    // }
+    
+    function isFarkle(currentRoll, lockedDice) {
+      const baseScore = calculateScore(lockedDice);
+      const n = currentRoll.length;
+    
+      // Try every non-empty subset of currentRoll
       for (let i = 1; i < (1 << n); i++) {
-        let subset = [];
+        const subset = [];
         for (let j = 0; j < n; j++) {
           if ((i & (1 << j)) !== 0) {
             subset.push(currentRoll[j]);
           }
         }
-
-        // Combine with lockedDice and check score
-        const testDice = [...lockedDice, ...subset];
-        if (calculateScore(testDice) > 0) {
-          return false; // There exists a scoring combination
+    
+        const testCombo = [...lockedDice, ...subset];
+        const newScore = calculateScore(testCombo);
+    
+        // Only allow if new score is strictly greater than locked dice score
+        if (newScore > baseScore) {
+          return false;
         }
       }
-
-      return true; // No scoring combination found — it's a Farkle
+    
+      // No improvement — this is a Farkle
+      return true;
     }
 
 
