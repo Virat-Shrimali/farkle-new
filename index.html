@@ -415,7 +415,7 @@
           //     selectedDiceIndices.add(idx);
           //     die.classList.add('selected');
           //   }
-          //   ();
+          //   updateButtons();
           // };
           // die.onclick = () => {
           //   if (!rollUsed) return;
@@ -444,7 +444,7 @@
           //     die.classList.add('selected');
           //   }
 
-          //   ();
+          //   updateButtons();
           // };
           // die.onclick = () => {
           //   if (!rollUsed) return;
@@ -473,7 +473,7 @@
           //       selectedDiceIndices.add(idx);
           //       die.classList.add('selected');
           //     }
-          //     ();
+          //     updateButtons();
           //   } else {
           //     // Invalid combo — don't allow this selection
           //     logMessage("This combination does not yield any score.");
@@ -503,7 +503,7 @@
           // selectedDiceIndices.add(idx);
           // die.classList.add('selected');
           // }
-          // ();
+          // updateButtons();
           // } else {
           // logMessage("This combination does not yield any score.");
           // }
@@ -533,7 +533,7 @@
           //       selectedDiceIndices.add(idx);
           //       die.classList.add('selected');
           //     }
-          //     ();
+          //     updateButtons();
           //   } else {
           //     logMessage("This selection doesn't yield a score. Choose a scoring combination.");
           //   }
@@ -551,7 +551,7 @@
     //           die.classList.add('selected');
     //         }
 
-    //         (); // This will now check if selected dice yield score
+    //         updateButtons(); // This will now check if selected dice yield score
     //       };
 
     //     });
@@ -866,23 +866,15 @@
     //   bankButton.disabled = !rollUsed || selectedDiceIndices.size === 0;
     //   endTurnButton.disabled = false; // Always allow ending turn
     // }
-    // function updateButtons() {
-    //   rollButton.disabled = rollUsed || players[currentPlayer].isComputer;
+    function updateButtons() {
+      rollButton.disabled = rollUsed || players[currentPlayer].isComputer;
 
-    //   const selectedDice = [...selectedDiceIndices].map(i => diceValues[i]);
-    //   const isScoringCombo = calculateScore(selectedDice) > 0;
+      const selectedDice = [...selectedDiceIndices].map(i => diceValues[i]);
+      const isScoringCombo = calculateScore(selectedDice) > 0;
 
-    //   bankButton.disabled = !rollUsed || !isScoringCombo;
-    //   endTurnButton.disabled = false; // Still allow ending turn
-    // }
-          function updateButtons() {
-          const isPlayerTurn = !players[currentPlayer].isComputer;
-        
-          rollButton.disabled = !isPlayerTurn || rollUsed;
-          bankButton.disabled = !isPlayerTurn || !rollUsed || selectedDiceIndices.size === 0 || calculateScore([...selectedDiceIndices].map(i => diceValues[i])) === 0;
-          endTurnButton.disabled = !isPlayerTurn;
-        }
-
+      bankButton.disabled = !rollUsed || !isScoringCombo;
+      endTurnButton.disabled = false; // Still allow ending turn
+    }
 
 
     // Handle rolling dice
@@ -1312,9 +1304,6 @@
     //   }
     // }
     function nextTurn() {
-      function nextTurn() {
-      rollUsed = false;
-
       currentPlayer = (currentPlayer + 1) % players.length;
 
       turnScore = 0;
@@ -1352,27 +1341,11 @@
       renderDice();
 
       const scoreThisRoll = calculateScore(diceValues);
-      // if (scoreThisRoll === 0) {
-      //   logMessage(`Computer farkled with ${diceValues.map(d => diceFaces[d - 1]).join(' ')}. Turn over.`);
-      //   nextTurn();
-      //   return;
-      // }
-      if (scoreThisRoll === 0 || isFarkle(diceValues, lockedDiceThisTurn)) {
-      const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
-      const announcementDiv = document.getElementById('announcement');
-      announcementDiv.innerHTML = `<span style="color: red; font-size: 1.5rem;">Farkle!</span><br>Computer Rolled: ${lastRollText}`;
-      announcementDiv.style.display = 'block';
-    
-      logMessage(`Computer farkled! Rolled: ${lastRollText}`);
-    
-      setTimeout(() => {
-        announcementDiv.style.display = 'none';
+      if (scoreThisRoll === 0) {
+        logMessage(`Computer farkled with ${diceValues.map(d => diceFaces[d - 1]).join(' ')}. Turn over.`);
         nextTurn();
-      }, 5000);
-    
-      return;
-    }
-
+        return;
+      }
       logMessage(`Computer rolled: ${diceValues.map(d => diceFaces[d - 1]).join(' ')} scoring ${scoreThisRoll} points.`);
 
       // 2. Select scoring dice automatically (all scoring dice)
@@ -1434,28 +1407,11 @@
       renderDice();
 
       const scoreThisRoll = calculateScore(diceValues);
-      // if (scoreThisRoll === 0) {
-      //   logMessage(`Computer farkled with ${diceValues.map(d => diceFaces[d - 1]).join(' ')}. Turn over.`);
-      //   nextTurn();
-      //   return;
-      // }
-
-      if (scoreThisRoll === 0 || isFarkle(diceValues, lockedDiceThisTurn)) {
-      const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
-      const announcementDiv = document.getElementById('announcement');
-      announcementDiv.innerHTML = `<span style="color: red; font-size: 1.5rem;">Farkle!</span><br>Computer Rolled: ${lastRollText}`;
-      announcementDiv.style.display = 'block';
-    
-      logMessage(`Computer farkled! Rolled: ${lastRollText}`);
-    
-      setTimeout(() => {
-        announcementDiv.style.display = 'none';
+      if (scoreThisRoll === 0) {
+        logMessage(`Computer farkled with ${diceValues.map(d => diceFaces[d - 1]).join(' ')}. Turn over.`);
         nextTurn();
-      }, 5000);
-    
-      return;
-    }
-
+        return;
+      }
       logMessage(`Computer rolled: ${diceValues.map(d => diceFaces[d - 1]).join(' ')} scoring ${scoreThisRoll} points.`);
 
       let indicesToKeep = [];
