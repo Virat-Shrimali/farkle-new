@@ -999,52 +999,52 @@
     // //     }
     // //     }
 
-//     function onRoll() {
-//   if (!canRoll) {
-//     logMessage('You cannot roll again unless you have Hot Dice.');
-//     return;
-//   }
-//   if (rollUsed) {
-//     logMessage('You can only roll once per turn. Please bank or end your turn.');
-//     return;
-//   }
+    function onRoll() {
+  if (!canRoll) {
+    logMessage('You cannot roll again unless you have Hot Dice.');
+    return;
+  }
+  if (rollUsed) {
+    logMessage('You can only roll once per turn. Please bank or end your turn.');
+    return;
+  }
 
-//   diceValues = rollDice(currentDiceCount);
-//   renderDice(); // ✅ Show dice BEFORE checking farkle
+  diceValues = rollDice(currentDiceCount);
+  renderDice(); // ✅ Show dice BEFORE checking farkle
 
-//   const scoreThisRoll = calculateScore(diceValues);
-//   const farkled = isFarkle(diceValues, lockedDiceThisTurn);
+  const scoreThisRoll = calculateScore(diceValues);
+  const farkled = isFarkle(diceValues, lockedDiceThisTurn);
 
-//   if (farkled) {
-//     const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
-//     const announcementDiv = document.getElementById('announcement');
-//     announcementDiv.innerHTML = `<span style="color: red; font-size: 1.5rem;">Farkle!</span><br>Last Roll: ${lastRollText}`;
-//     announcementDiv.style.display = 'block';
+  if (farkled) {
+    const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
+    const announcementDiv = document.getElementById('announcement');
+    announcementDiv.innerHTML = `<span style="color: red; font-size: 1.5rem;">Farkle!</span><br>Last Roll: ${lastRollText}`;
+    announcementDiv.style.display = 'block';
 
-//     logMessage(`${players[currentPlayer].name} farkled! Rolled: ${lastRollText}`);
+    logMessage(`${players[currentPlayer].name} farkled! Rolled: ${lastRollText}`);
 
-//     setTimeout(() => {
-//       // Reset player turn state
-//       turnScore = 0;
-//       currentScore = 0;
-//       rollUsed = false;
-//       selectedDiceIndices.clear();
-//       lockedDiceThisTurn = [];
-//       updateLockedDiceDisplay();
-//       announcementDiv.style.display = 'none';
-//       nextTurn();
-//     }, 2500); // ⏳ Wait before switching turn
+    setTimeout(() => {
+      // Reset player turn state
+      turnScore = 0;
+      currentScore = 0;
+      rollUsed = false;
+      selectedDiceIndices.clear();
+      lockedDiceThisTurn = [];
+      updateLockedDiceDisplay();
+      announcementDiv.style.display = 'none';
+      nextTurn();
+    }, 2500); // ⏳ Wait before switching turn
 
-//     return;
-//   }
+    return;
+  }
 
-//   logMessage(`${players[currentPlayer].name} rolled: ${diceValues.map(d => diceFaces[d - 1]).join(' ')}`);
-//   rollUsed = true;
-//   selectedDiceIndices.clear();
-//   currentScore += 0; // Only added when banking dice
-//   updateButtons();
-//   updateLockedDiceDisplay();
-// }
+  logMessage(`${players[currentPlayer].name} rolled: ${diceValues.map(d => diceFaces[d - 1]).join(' ')}`);
+  rollUsed = true;
+  selectedDiceIndices.clear();
+  currentScore += 0; // Only added when banking dice
+  updateButtons();
+  updateLockedDiceDisplay();
+}
 
 
     function onBank() {
