@@ -540,25 +540,56 @@
           //     logMessage("This selection doesn't yield a score. Choose a scoring combination.");
           //   }
           // };
+    //       die.onclick = () => {
+    //         if (!rollUsed) return;
+
+    //         const idx = parseInt(die.dataset.index);
+
+    //         if (selectedDiceIndices.has(idx)) {
+    //           selectedDiceIndices.delete(idx);
+    //           die.classList.remove('selected');
+    //         } else {
+    //           selectedDiceIndices.add(idx);
+    //           die.classList.add('selected');
+    //         }
+
+    //         updateButtons(); // This will now check if selected dice yield score
+    //       };
+
+    //     });
+    //   }
+    // }
           die.onclick = () => {
-            if (!rollUsed) return;
+  if (!rollUsed) return;
 
-            const idx = parseInt(die.dataset.index);
+  const idx = parseInt(die.dataset.index);
+  const newSelection = new Set(selectedDiceIndices);
 
-            if (selectedDiceIndices.has(idx)) {
-              selectedDiceIndices.delete(idx);
-              die.classList.remove('selected');
-            } else {
-              selectedDiceIndices.add(idx);
-              die.classList.add('selected');
-            }
+  if (newSelection.has(idx)) {
+    newSelection.delete(idx);
+  } else {
+    newSelection.add(idx);
+  }
 
-            updateButtons(); // This will now check if selected dice yield score
-          };
+  const selectedDice = [...newSelection].map(i => diceValues[i]);
+  const baseScore = calculateScore(lockedDiceThisTurn);
+  const newScore = calculateScore([...lockedDiceThisTurn, ...selectedDice]);
 
-        });
-      }
+  if (newScore > baseScore) {
+    // Acceptable – update visual selection
+    if (selectedDiceIndices.has(idx)) {
+      selectedDiceIndices.delete(idx);
+      die.classList.remove('selected');
+    } else {
+      selectedDiceIndices.add(idx);
+      die.classList.add('selected');
     }
+    updateButtons();
+  } else {
+    logMessage("This selection doesn't improve your current locked dice score.");
+  }
+};
+
 
     // Calculate score based on dice array
     // function calculateScore(dice) {
