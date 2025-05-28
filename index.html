@@ -188,7 +188,20 @@
       <label><input type="radio" name="gameMode" value="vsComputer"> vs Computer</label>
     </div>
     <div class="scoreboard" id="scoreboard"></div>
+    <!-- ===== ROLL COUNTER DISPLAY ===== -->
+    <div id="roll-counter" style="
+      text-align: center;
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+      font-weight: bold;
+      color: #ffd54f;
+      text-shadow: 0 2px 4px #311f00;
+      ">
+      Rolls this turn: 0
+    </div>
+    <!-- =============================== -->
     <div id="dice-container"></div>
+
     <div class="controls">
       <button id="roll-button">Roll Dice</button>
       <button id="bank-button" disabled>Lock Dice</button>
@@ -244,6 +257,13 @@
     let currentDiceCount = 6;
     let canRoll = true;
     let rollCount = 0;  // Tracks number of rolls in current turn
+
+        // ─── HELPER TO REFRESH THE ON-SCREEN COUNTER ─────────────────────────────────
+    function updateRollCounter() {
+      document.getElementById('roll-counter').textContent = `Rolls this turn: ${rollCount}`;
+    }
+    // ───────────────────────────────────────────────────────────────────────────────
+
 
 
     let lockedDiceThisTurn = []; // Accumulates all locked dice faces for current turn
@@ -352,6 +372,8 @@
       diceValues = [];
       rollUsed = false;
       selectedDiceIndices.clear();
+      rollCount = 0;
+      updateRollCounter();
       updateScoreboard();
       renderDice();
       logClear();
@@ -1252,6 +1274,8 @@
       // ▶️ Not a Farkle ⇒ show final faces and allow selection:
       logMessage(`${players[currentPlayer].name} rolled: ${lastRollText}`);
       rollCount++;
+      updateRollCounter();
+
 
       // If 3 rolls used, reset the turn:
       if (rollCount >= 3) {
@@ -1262,6 +1286,8 @@
         currentDiceCount = 6;
         rollUsed = false;
         rollCount = 0;
+        updateRollCounter();
+
         selectedDiceIndices.clear();
         lockedDiceThisTurn = [];
         diceValues = [];
@@ -1467,6 +1493,7 @@
     // }
     function nextTurn() {
       rollCount = 0;
+      updateRollCounter();
 
       currentPlayer = (currentPlayer + 1) % players.length;
 
