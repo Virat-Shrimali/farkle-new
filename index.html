@@ -395,9 +395,37 @@
     }
 
     // Roll dice randomly
-    function rollDice(num) {
-      return Array.from({ length: num }, () => Math.floor(Math.random() * 6) + 1);
-    }
+    // Roll dice randomly
+    function rollDice() {
+    if (!canRoll) return;
+    canRoll = false;
+    rollButton.disabled = true;
+    const animations = 6; // number of animation frames
+    let count = 0;
+    const animInterval = setInterval(() => {
+      // show random faces for animation
+      const tempValues = Array.from(
+        { length: currentDiceCount },
+        () => Math.floor(Math.random() * 6) + 1
+      );
+      diceValues = tempValues;
+      renderDice();
+      count++;
+      if (count >= animations) {
+        clearInterval(animInterval);
+        // final roll
+        diceValues = Array.from(
+          { length: currentDiceCount },
+          () => Math.floor(Math.random() * 6) + 1
+        );
+        renderDice();
+        // After showing, enable buttons based on game logic
+        bankButton.disabled = false;
+        endTurnButton.disabled = false;
+        canRoll = true;
+      }
+    }, 100);
+  }
 
     // Render dice on UI
     function renderDice() {
