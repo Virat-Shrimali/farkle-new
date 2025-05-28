@@ -243,6 +243,8 @@
     let currentScore = 0;
     let currentDiceCount = 6;
     let canRoll = true;
+    let rollCount = 0;  // Tracks number of rolls in current turn
+
 
     let lockedDiceThisTurn = []; // Accumulates all locked dice faces for current turn
     let diceValues = [];
@@ -1068,6 +1070,8 @@
         logMessage(`${players[currentPlayer].name} got Hot Dice! You may roll all six dice again.`);
         currentDiceCount = 6;
         lockedDiceThisTurn = [];
+        rollCount = 0; // Allow 3 new rolls after Hot Dice
+
       } else {
         currentDiceCount -= selectedDice.length;
       }
@@ -1081,6 +1085,12 @@
 
     function onRoll() {
       document.getElementById('announcement').innerHTML = '';
+
+      if (rollCount >= 3) {
+        logMessage("You've already rolled 3 times this turn. Please bank or end your turn.");
+        return;
+      }
+
 
       if (!canRoll) {
         logMessage('You cannot roll again unless you have Hot Dice.');
@@ -1118,6 +1128,8 @@
       }
 
       logMessage(`${players[currentPlayer].name} rolled: ${lastRollText}`);
+      rollCount++;
+
       rollUsed = true;
       selectedDiceIndices.clear();
       updateButtons();
@@ -1184,6 +1196,8 @@
     //   nextTurn(); // 👈 This is what triggers the next player's turn
     // }
     function onEndTurn() {
+      rollCount = 0;
+
       if (!rollUsed && turnScore === 0) {
         logMessage('You must roll at least once or bank points before ending your turn.');
         return;
@@ -1305,6 +1319,8 @@
     //   }
     // }
     function nextTurn() {
+      rollCount = 0;
+
       currentPlayer = (currentPlayer + 1) % players.length;
 
       turnScore = 0;
