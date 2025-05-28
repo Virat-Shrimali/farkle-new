@@ -422,7 +422,6 @@
         // After showing, enable buttons based on game logic
         bankButton.disabled = false;
         endTurnButton.disabled = false;
-        rollUsed - true;
         canRoll = true;
       }
     }, 100);
@@ -1112,27 +1111,121 @@
       renderDice();
     }
 
+    // function onRoll() {
+    //   document.getElementById('announcement').innerHTML = '';
+
+    //   if (rollCount >= 3) {
+    //     logMessage("You've already rolled 3 times this turn. Please bank or end your turn.");
+    //     return;
+    //   }
+
+
+    //   if (!canRoll) {
+    //     logMessage('You cannot roll again unless you have Hot Dice.');
+    //     return;
+    //   }
+    //   if (rollUsed) {
+    //     logMessage('You can only roll once per turn. Please bank or end your turn.');
+    //     return;
+    //   }
+
+    //   diceValues = rollDice(currentDiceCount);
+    //   renderDice();
+
+    //   const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
+    //   const farkled = isFarkle(diceValues, lockedDiceThisTurn);
+
+    //   if (farkled) {
+    //     const announcementDiv = document.getElementById('announcement');
+    //     announcementDiv.innerHTML = `<span style="color: red; font-size: 1.5rem;">Farkle!</span><br>Last Roll: ${lastRollText}`;
+    //     announcementDiv.style.display = 'block';
+
+    //     setTimeout(() => {
+    //       announcementDiv.style.display = 'none';
+    //       // Reset player state
+    //       turnScore = 0;
+    //       currentScore = 0;
+    //       rollUsed = false;
+    //       selectedDiceIndices.clear();
+    //       lockedDiceThisTurn = [];
+    //       updateLockedDiceDisplay();
+    //       nextTurn();
+    //     }, 2500); // Delay to show Farkle result
+
+    //     return;
+    //   }
+
+    //   logMessage(`${players[currentPlayer].name} rolled: ${lastRollText}`);
+    //   rollCount++;
+
+    //   if (rollCount >= 3) {
+    //     const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
+    //     logMessage(`${players[currentPlayer].name} has used 3 rolls.<br>Last roll: ${lastRollText}<br>Turn is reset with fresh dice.`);
+
+    //     // Reset turn state
+    //     turnScore = 0;
+    //     currentScore = 0;
+    //     currentDiceCount = 6;
+    //     rollUsed = false;
+    //     rollCount = 0;
+    //     selectedDiceIndices.clear();
+    //     lockedDiceThisTurn = [];
+    //     diceValues = [];
+
+    //     updateButtons();
+    //     updateLockedDiceDisplay();
+    //     renderDice();
+
+    //     return;
+    //   }
+
+
+    //   rollUsed = true;
+    //   selectedDiceIndices.clear();
+    //   updateButtons();
+    //   updateLockedDiceDisplay();
+    // }
     function onRoll() {
-      document.getElementById('announcement').innerHTML = '';
+  document.getElementById('announcement').innerHTML = '';
 
-      if (rollCount >= 3) {
-        logMessage("You've already rolled 3 times this turn. Please bank or end your turn.");
-        return;
-      }
+  if (rollCount >= 3) {
+    logMessage("You've already rolled 3 times this turn. Please bank or end your turn.");
+    return;
+  }
 
+  if (!canRoll) {
+    logMessage('You cannot roll again unless you have Hot Dice.');
+    return;
+  }
+  if (rollUsed) {
+    logMessage('You can only roll once per turn. Please bank or end your turn.');
+    return;
+  }
 
-      if (!canRoll) {
-        logMessage('You cannot roll again unless you have Hot Dice.');
-        return;
-      }
-      if (rollUsed) {
-        logMessage('You can only roll once per turn. Please bank or end your turn.');
-        return;
-      }
-
-      diceValues = rollDice(currentDiceCount);
+  // ▶️ Start animation + final roll:
+  canRoll = false;
+  rollButton.disabled = true;
+  const animations = 6;
+  let count = 0;
+  const animInterval = setInterval(() => {
+    // show random faces for animation
+    const tempValues = Array.from(
+      { length: currentDiceCount },
+      () => Math.floor(Math.random() * 6) + 1
+    );
+    diceValues = tempValues;
+    renderDice();
+    count++;
+    if (count >= animations) {
+      clearInterval(animInterval);
+      // Final roll now:
+      diceValues = Array.from(
+        { length: currentDiceCount },
+        () => Math.floor(Math.random() * 6) + 1
+      );
       renderDice();
 
+      // ▶️ Check for a Farkle with the final values:
       const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
       const farkled = isFarkle(diceValues, lockedDiceThisTurn);
 
@@ -1143,7 +1236,7 @@
 
         setTimeout(() => {
           announcementDiv.style.display = 'none';
-          // Reset player state
+          // Reset turn state:
           turnScore = 0;
           currentScore = 0;
           rollUsed = false;
@@ -1151,19 +1244,19 @@
           lockedDiceThisTurn = [];
           updateLockedDiceDisplay();
           nextTurn();
-        }, 2500); // Delay to show Farkle result
-
+        }, 2500);
+        canRoll = true;
         return;
       }
 
+      // ▶️ Not a Farkle ⇒ show final faces and allow selection:
       logMessage(`${players[currentPlayer].name} rolled: ${lastRollText}`);
       rollCount++;
 
+      // If 3 rolls used, reset the turn:
       if (rollCount >= 3) {
-        const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
-        logMessage(`${players[currentPlayer].name} has used 3 rolls.<br>Last roll: ${lastRollText}<br>Turn is reset with fresh dice.`);
-
-        // Reset turn state
+        const finalText = diceValues.map(d => diceFaces[d - 1]).join(' ');
+        logMessage(`${players[currentPlayer].name} has used 3 rolls.<br>Last roll: ${finalText}<br>Turn is reset with fresh dice.`);
         turnScore = 0;
         currentScore = 0;
         currentDiceCount = 6;
@@ -1172,20 +1265,23 @@
         selectedDiceIndices.clear();
         lockedDiceThisTurn = [];
         diceValues = [];
-
         updateButtons();
         updateLockedDiceDisplay();
         renderDice();
-
+        canRoll = true;
         return;
       }
 
-
+      // Otherwise… allow the user to select from these faces:
       rollUsed = true;
       selectedDiceIndices.clear();
       updateButtons();
       updateLockedDiceDisplay();
+      canRoll = true;
     }
+  }, 100);
+}
+
 
     // Handle ending turn
     // function onEndTurn() {
