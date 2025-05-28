@@ -300,11 +300,11 @@
 
     //   return true; // No scoring combination found — it's a Farkle
     // }
-    
+
     function isFarkle(currentRoll, lockedDice) {
       const baseScore = calculateScore(lockedDice);
       const n = currentRoll.length;
-    
+
       // Try every non-empty subset of currentRoll
       for (let i = 1; i < (1 << n); i++) {
         const subset = [];
@@ -313,16 +313,16 @@
             subset.push(currentRoll[j]);
           }
         }
-    
+
         const testCombo = [...lockedDice, ...subset];
         const newScore = calculateScore(testCombo);
-    
+
         // Only allow if new score is strictly greater than locked dice score
         if (newScore > baseScore) {
           return false;
         }
       }
-    
+
       // No improvement — this is a Farkle
       return true;
     }
@@ -999,52 +999,52 @@
     // //     }
     // //     }
 
-//     function onRoll() {
-//   if (!canRoll) {
-//     logMessage('You cannot roll again unless you have Hot Dice.');
-//     return;
-//   }
-//   if (rollUsed) {
-//     logMessage('You can only roll once per turn. Please bank or end your turn.');
-//     return;
-//   }
+    //     function onRoll() {
+    //   if (!canRoll) {
+    //     logMessage('You cannot roll again unless you have Hot Dice.');
+    //     return;
+    //   }
+    //   if (rollUsed) {
+    //     logMessage('You can only roll once per turn. Please bank or end your turn.');
+    //     return;
+    //   }
 
-//   diceValues = rollDice(currentDiceCount);
-//   renderDice(); // ✅ Show dice BEFORE checking farkle
+    //   diceValues = rollDice(currentDiceCount);
+    //   renderDice(); // ✅ Show dice BEFORE checking farkle
 
-//   const scoreThisRoll = calculateScore(diceValues);
-//   const farkled = isFarkle(diceValues, lockedDiceThisTurn);
+    //   const scoreThisRoll = calculateScore(diceValues);
+    //   const farkled = isFarkle(diceValues, lockedDiceThisTurn);
 
-//   if (farkled) {
-//     const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
-//     const announcementDiv = document.getElementById('announcement');
-//     announcementDiv.innerHTML = `<span style="color: red; font-size: 1.5rem;">Farkle!</span><br>Last Roll: ${lastRollText}`;
-//     announcementDiv.style.display = 'block';
+    //   if (farkled) {
+    //     const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
+    //     const announcementDiv = document.getElementById('announcement');
+    //     announcementDiv.innerHTML = `<span style="color: red; font-size: 1.5rem;">Farkle!</span><br>Last Roll: ${lastRollText}`;
+    //     announcementDiv.style.display = 'block';
 
-//     logMessage(`${players[currentPlayer].name} farkled! Rolled: ${lastRollText}`);
+    //     logMessage(`${players[currentPlayer].name} farkled! Rolled: ${lastRollText}`);
 
-//     setTimeout(() => {
-//       // Reset player turn state
-//       turnScore = 0;
-//       currentScore = 0;
-//       rollUsed = false;
-//       selectedDiceIndices.clear();
-//       lockedDiceThisTurn = [];
-//       updateLockedDiceDisplay();
-//       announcementDiv.style.display = 'none';
-//       nextTurn();
-//     }, 2500); // ⏳ Wait before switching turn
+    //     setTimeout(() => {
+    //       // Reset player turn state
+    //       turnScore = 0;
+    //       currentScore = 0;
+    //       rollUsed = false;
+    //       selectedDiceIndices.clear();
+    //       lockedDiceThisTurn = [];
+    //       updateLockedDiceDisplay();
+    //       announcementDiv.style.display = 'none';
+    //       nextTurn();
+    //     }, 2500); // ⏳ Wait before switching turn
 
-//     return;
-//   }
+    //     return;
+    //   }
 
-//   logMessage(`${players[currentPlayer].name} rolled: ${diceValues.map(d => diceFaces[d - 1]).join(' ')}`);
-//   rollUsed = true;
-//   selectedDiceIndices.clear();
-//   currentScore += 0; // Only added when banking dice
-//   updateButtons();
-//   updateLockedDiceDisplay();
-// }
+    //   logMessage(`${players[currentPlayer].name} rolled: ${diceValues.map(d => diceFaces[d - 1]).join(' ')}`);
+    //   rollUsed = true;
+    //   selectedDiceIndices.clear();
+    //   currentScore += 0; // Only added when banking dice
+    //   updateButtons();
+    //   updateLockedDiceDisplay();
+    // }
 
 
     function onBank() {
@@ -1059,28 +1059,17 @@
 
       const selectedDice = [...selectedDiceIndices].map(i => diceValues[i]);
       const scoreSelected = calculateScore(selectedDice);
-      // if (scoreSelected === 0) {
-      //   logMessage('Selected dice do not yield any points.');
-      //   return;
-      // }
-
       currentScore += scoreSelected;
       turnScore += scoreSelected;
-
-      // Add selected dice to lockedDiceThisTurn
       lockedDiceThisTurn.push(...selectedDice);
 
-      // Update locked dice display
-      document.getElementById('locked-dice-values').textContent = lockedDiceThisTurn.map(d => diceFaces[d - 1]).join(' ');
-
-      // Determine next dice count
-      currentDiceCount -= selectedDice.length;
-
-      // Hot Dice: all dice used scored
-      if (currentDiceCount === 0) {
+      // ✅ Correct Hot Dice detection
+      if (selectedDice.length === diceValues.length && scoreSelected > 0) {
         logMessage(`${players[currentPlayer].name} got Hot Dice! You may roll all six dice again.`);
         currentDiceCount = 6;
-        lockedDiceThisTurn = []; // Reset locked for next round
+        lockedDiceThisTurn = [];
+      } else {
+        currentDiceCount -= selectedDice.length;
       }
 
       rollUsed = false;
@@ -1090,50 +1079,50 @@
       renderDice();
     }
 
-      function onRoll() {
-        document.getElementById('announcement').innerHTML = '';
+    function onRoll() {
+      document.getElementById('announcement').innerHTML = '';
 
-    if (!canRoll) {
-      logMessage('You cannot roll again unless you have Hot Dice.');
-      return;
+      if (!canRoll) {
+        logMessage('You cannot roll again unless you have Hot Dice.');
+        return;
+      }
+      if (rollUsed) {
+        logMessage('You can only roll once per turn. Please bank or end your turn.');
+        return;
+      }
+
+      diceValues = rollDice(currentDiceCount);
+      renderDice();
+
+      const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
+      const farkled = isFarkle(diceValues, lockedDiceThisTurn);
+
+      if (farkled) {
+        const announcementDiv = document.getElementById('announcement');
+        announcementDiv.innerHTML = `<span style="color: red; font-size: 1.5rem;">Farkle!</span><br>Last Roll: ${lastRollText}`;
+        announcementDiv.style.display = 'block';
+
+        setTimeout(() => {
+          announcementDiv.style.display = 'none';
+          // Reset player state
+          turnScore = 0;
+          currentScore = 0;
+          rollUsed = false;
+          selectedDiceIndices.clear();
+          lockedDiceThisTurn = [];
+          updateLockedDiceDisplay();
+          nextTurn();
+        }, 2500); // Delay to show Farkle result
+
+        return;
+      }
+
+      logMessage(`${players[currentPlayer].name} rolled: ${lastRollText}`);
+      rollUsed = true;
+      selectedDiceIndices.clear();
+      updateButtons();
+      updateLockedDiceDisplay();
     }
-    if (rollUsed) {
-      logMessage('You can only roll once per turn. Please bank or end your turn.');
-      return;
-    }
-  
-    diceValues = rollDice(currentDiceCount);
-    renderDice();
-  
-    const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
-    const farkled = isFarkle(diceValues, lockedDiceThisTurn);
-  
-    if (farkled) {
-      const announcementDiv = document.getElementById('announcement');
-      announcementDiv.innerHTML = `<span style="color: red; font-size: 1.5rem;">Farkle!</span><br>Last Roll: ${lastRollText}`;
-      announcementDiv.style.display = 'block';
-  
-      setTimeout(() => {
-        announcementDiv.style.display = 'none';
-        // Reset player state
-        turnScore = 0;
-        currentScore = 0;
-        rollUsed = false;
-        selectedDiceIndices.clear();
-        lockedDiceThisTurn = [];
-        updateLockedDiceDisplay();
-        nextTurn();
-      }, 2500); // Delay to show Farkle result
-  
-      return;
-    }
-  
-    logMessage(`${players[currentPlayer].name} rolled: ${lastRollText}`);
-    rollUsed = true;
-    selectedDiceIndices.clear();
-    updateButtons();
-    updateLockedDiceDisplay();
-  }
 
     // Handle ending turn
     // function onEndTurn() {
