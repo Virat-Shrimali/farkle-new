@@ -1130,6 +1130,28 @@
       logMessage(`${players[currentPlayer].name} rolled: ${lastRollText}`);
       rollCount++;
 
+      if (rollCount >= 3) {
+        const lastRollText = diceValues.map(d => diceFaces[d - 1]).join(' ');
+        logMessage(`${players[currentPlayer].name} has used 3 rolls.<br>Last roll: ${lastRollText}<br>Turn is reset with fresh dice.`);
+
+        // Reset turn state
+        turnScore = 0;
+        currentScore = 0;
+        currentDiceCount = 6;
+        rollUsed = false;
+        rollCount = 0;
+        selectedDiceIndices.clear();
+        lockedDiceThisTurn = [];
+        diceValues = [];
+
+        updateButtons();
+        updateLockedDiceDisplay();
+        renderDice();
+
+        return;
+      }
+
+
       rollUsed = true;
       selectedDiceIndices.clear();
       updateButtons();
