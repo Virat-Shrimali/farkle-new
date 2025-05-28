@@ -387,9 +387,9 @@
       announcementDiv.innerHTML = msg;
 
       // Optional: Clear after 3 seconds (can adjust or remove)
-      setTimeout(() => {
-        announcementDiv.style.display = 'none';
-      }, 3000);
+      // setTimeout(() => {
+      //   announcementDiv.style.display = 'none';
+      // }, 3000);
     }
 
     // Roll dice randomly
@@ -1091,6 +1091,8 @@
     }
 
       function onRoll() {
+        document.getElementById('announcement').innerHTML = '';
+
     if (!canRoll) {
       logMessage('You cannot roll again unless you have Hot Dice.');
       return;
